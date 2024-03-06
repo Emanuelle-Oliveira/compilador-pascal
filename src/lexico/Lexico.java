@@ -160,24 +160,45 @@ public class Lexico {
         token = new Token(linha, coluna, Classe.doisPontos);
         caractere = proximoChar();
         linha++;
+
+        if (caractere == '=') {
+          token = new Token(linha, coluna, Classe.atribuicao);
+          caractere = proximoChar();
+          linha++;
+        }
         return token;
 
       } else if (caractere == '>') {
-        token = new Token(linha, coluna, Classe.doisPontos);
+        token = new Token(linha, coluna, Classe.operadorMaior);
         caractere = proximoChar();
         linha++;
+
+        if (caractere == '=') {
+          token = new Token(linha, coluna, Classe.operadorMaiorIgual);
+          caractere = proximoChar();
+          linha++;
+        }
         return token;
 
       } else if (caractere == '<') {
-        token = new Token(linha, coluna, Classe.doisPontos);
+        token = new Token(linha, coluna, Classe.operadorMenor);
         caractere = proximoChar();
         linha++;
-        return token;
 
-      }
+        if (caractere == '=') {
+          token = new Token(linha, coluna, Classe.operadorMenorIgual);
+          caractere = proximoChar();
+          linha++;
+        } else if (caractere == '>') {
+          token = new Token(linha, coluna, Classe.operadorDiferente);
+          caractere = proximoChar();
+          linha++;
+        }
+        return token;
+      } 
  
  
-      System.out.println("Caractere: " + caractere);
+      //System.out.println("Caractere: " + caractere);
     } while (caractere != 65535);
 
     return new Token(linha, coluna, Classe.EOF);

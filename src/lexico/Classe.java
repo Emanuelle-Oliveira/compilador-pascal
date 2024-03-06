@@ -5,22 +5,22 @@ public enum Classe {
   palavraReservada,
   numeroInteiro,
   EOF,
-  //operadorSoma, // +
-  //operadorSubtracao, // -
-  //operadorMultiplicacao, // *
-  //operadorDivisao, // /
+  operadorSoma, // +
+  operadorSubtracao, // -
+  operadorMultiplicacao, // *
+  operadorDivisao, // /
   operadorMaior, // >
   operadorMenor, // <
   operadorMenorIgual, // <=
   operadorDiferente, // <>
   operadorMaiorIgual, // >=
-  //operadorIgual,  // =
+  operadorIgual,  // =
   atribuicao,  // :=
-  //pontoEVirgula,  // ;
-  //virgula, // ,
-  //ponto,
-  //doisPontos, // :
-  //parentesesEsquerdo, // (
-  //parentesesDireito, // )
+  pontoEVirgula,  // ;
+  virgula, // ,
+  ponto,
+  doisPontos, // :
+  parentesesEsquerdo, // (
+  parentesesDireito, // )
   string
 }
