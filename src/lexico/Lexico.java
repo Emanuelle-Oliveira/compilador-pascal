@@ -24,7 +24,8 @@ public class Lexico {
     "of", "or", "packed", "procedure", "program",
     "record", "repeat", "set", "then", "to",
     "type", "until", "var", "while", "with",
-    "integer", "real", "boolean", "char", "string"
+    "integer", "real", "boolean", "char", "string",
+    "write", "writeln", "read"
   );
 
   private Boolean ehPalavraReservada(String lexema) {
@@ -222,7 +223,6 @@ public class Lexico {
         coluna++;
 
         while (caractere != '}') {
-          
           if (caractere == '\n') {
             caractere = proximoChar();
             linha++;
@@ -235,8 +235,31 @@ public class Lexico {
             coluna++;
           }
         }
+
         caractere = proximoChar();
-        linha++;
+        coluna++;
+
+      } else if (caractere == '\'') {
+        token = new Token(linha, coluna);
+
+        caractere = proximoChar();
+        coluna++;
+
+        while (caractere != '\'') {
+          lexema.append(caractere);
+
+          if (caractere == '\n' || caractere == 65535) {
+            System.err.println("Erro na linha " + linha + " e coluna " + coluna + ": String não foi fechada!");
+            System.exit(-1);
+          } else {
+            caractere = proximoChar();
+            coluna++;
+          }
+        }
+
+        token.setClasse(Classe.string);
+        token.setValor(new Valor(lexema.toString()));
+        return token;
 
       } else if (caractere == 65535) {
         return new Token(linha, coluna, Classe.EOF);

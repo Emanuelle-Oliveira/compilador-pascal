@@ -17,5 +17,6 @@ begin
         write(y);
     end;
     { comentario com codigo na frente } x := 10;
-    {
-        end
+    'firofrkgj2134'
+    'fefr
+    aaa'
