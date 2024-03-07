@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 public class Lexico {
   private String nomeArquivo;
@@ -14,6 +16,20 @@ public class Lexico {
   private StringBuilder lexema = new StringBuilder();
   private int linha;
   private int coluna;
+  private List<String> palavrasReservadas = Arrays.asList(
+    "and", "array", "begin", "case", "const",
+    "div", "do", "downto", "else", "end",
+    "file", "for", "function", "goto", "if",
+    "in", "label", "mod", "nil", "not",
+    "of", "or", "packed", "procedure", "program",
+    "record", "repeat", "set", "then", "to",
+    "type", "until", "var", "while", "with",
+    "integer", "real", "boolean", "char", "string"
+  );
+
+  private Boolean ehPalavraReservada(String lexema) {
+    return palavrasReservadas.contains(lexema);
+  }
 
   public Lexico(String nomeArquivo) {
     this.nomeArquivo = nomeArquivo;
@@ -62,7 +78,12 @@ public class Lexico {
           coluna++;
         }
 
-        token.setClasse(Classe.identificador);
+        if(ehPalavraReservada(lexema.toString())) {
+          token.setClasse(Classe.palavraReservada);
+        } else {
+          token.setClasse(Classe.identificador);
+        }
+
         token.setValor(new Valor(lexema.toString()));
         return token;
 
@@ -196,8 +217,6 @@ public class Lexico {
         }
         return token;
       } 
- 
- 
       //System.out.println("Caractere: " + caractere);
     } while (caractere != 65535);
 
