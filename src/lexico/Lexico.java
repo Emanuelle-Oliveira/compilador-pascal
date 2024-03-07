@@ -120,103 +120,131 @@ public class Lexico {
       } else if (caractere == '+') {
         token = new Token(linha, coluna, Classe.operadorSoma);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == '-') {
         token = new Token(linha, coluna, Classe.operadorSubtracao);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == '*') {
         token = new Token(linha, coluna, Classe.operadorMultiplicacao);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == '/') {
         token = new Token(linha, coluna, Classe.operadorDiferente);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == '=') {
         token = new Token(linha, coluna, Classe.operadorIgual);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == ';') {
         token = new Token(linha, coluna, Classe.pontoEVirgula);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == ',') {
         token = new Token(linha, coluna, Classe.virgula);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
  
       } else if (caractere == '.') {
         token = new Token(linha, coluna, Classe.ponto);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == '(') {
         token = new Token(linha, coluna, Classe.parentesesEsquerdo);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
 
       } else if (caractere == ')') {
         token = new Token(linha, coluna, Classe.parentesesDireito);
         caractere = proximoChar();
-        linha++;
+        coluna++;
         return token;
  
       } else if (caractere == ':') {
         token = new Token(linha, coluna, Classe.doisPontos);
         caractere = proximoChar();
-        linha++;
+        coluna++;
 
         if (caractere == '=') {
           token = new Token(linha, coluna, Classe.atribuicao);
           caractere = proximoChar();
-          linha++;
+          coluna++;
         }
         return token;
 
       } else if (caractere == '>') {
         token = new Token(linha, coluna, Classe.operadorMaior);
         caractere = proximoChar();
-        linha++;
+        coluna++;
 
         if (caractere == '=') {
           token = new Token(linha, coluna, Classe.operadorMaiorIgual);
           caractere = proximoChar();
-          linha++;
+          coluna++;
         }
         return token;
 
       } else if (caractere == '<') {
         token = new Token(linha, coluna, Classe.operadorMenor);
         caractere = proximoChar();
-        linha++;
+        coluna++;
 
         if (caractere == '=') {
           token = new Token(linha, coluna, Classe.operadorMenorIgual);
           caractere = proximoChar();
-          linha++;
+          coluna++;
         } else if (caractere == '>') {
           token = new Token(linha, coluna, Classe.operadorDiferente);
           caractere = proximoChar();
-          linha++;
+          coluna++;
         }
         return token;
-      } 
+
+      } else if (caractere == '{') {
+        caractere = proximoChar();
+        coluna++;
+
+        while (caractere != '}') {
+          
+          if (caractere == '\n') {
+            caractere = proximoChar();
+            linha++;
+            coluna = 1;
+          } else if (caractere == 65535) {
+            System.err.println("Erro na linha " + linha + " e coluna " + coluna + ": O comentário não foi fechado!");
+            System.exit(-1);
+          } else {
+            caractere = proximoChar();
+            coluna++;
+          }
+        }
+        caractere = proximoChar();
+        linha++;
+
+      } else if (caractere == 65535) {
+        return new Token(linha, coluna, Classe.EOF);
+
+      } else {
+        System.err.println("Erro na linha " + linha + " e coluna " + coluna);
+        System.exit(-1);
+      }
       //System.out.println("Caractere: " + caractere);
     } while (caractere != 65535);
 
