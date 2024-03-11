@@ -1,6 +1,7 @@
 import lexico.Classe;
 import lexico.Lexico;
 import lexico.Token;
+import sintatico.Sintatico;
 
 public class Compilador {
 
@@ -10,13 +11,9 @@ public class Compilador {
       return;
     }
 
-    Lexico lexico = new Lexico(args[0]);
-    Token token;
+    Sintatico sintatico = new Sintatico(args[0]);
 
-    do {
-      token = lexico.nextToken();
-      System.out.println(token);
-    } while (token.getClasse() != Classe.EOF);
+    sintatico.analisar();
   }
 
 }

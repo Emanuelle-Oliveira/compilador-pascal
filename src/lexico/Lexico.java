@@ -236,7 +236,7 @@ public class Lexico {
           }
         }
 
-        caractere = proximoChar();
+        caractere = proximoChar();linha++;
         coluna++;
 
       } else if (caractere == '\'') {

@@ -1,13 +1,17 @@
-{ teste comentario  }
+program condicional;
+begin
+end .
+
+{ teste comentario  
 program condicional;
 var
     x, y: integer;
 begin
     read(x);
     read(y);
-    { outro
+    outro
     comentario 
-    varias linhas }
+    varias linhas 
     if (x >= 10) then
     begin
         write(x);
@@ -16,7 +20,6 @@ begin
     begin
         write(y);
     end;
-    { comentario com codigo na frente } x := 10;
-    'firofrkgj2134'
-    'fefr
-    aaa'
+    comentario com codigo na frente  x := 10;
+    
+        end.}
