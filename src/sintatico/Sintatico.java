@@ -21,10 +21,13 @@ public class Sintatico {
         programa();
     }
 
+    public Boolean ehDeterminadaPalavraReservada(String palavra) {
+        return token.getClasse() == Classe.palavraReservada && token.getValor().getValorTexto().equals(palavra);
+    }
+
     // <programa> ::= program <id> {A01} ; <corpo> • {A45}
     private void programa() {
-        if (token.getClasse() == Classe.palavraReservada && 
-            token.getValor().getValorTexto().equals("program")) {
+        if (ehDeterminadaPalavraReservada("program")) {
             token = lexico.nextToken();
 
             if(token.getClasse() == Classe.identificador) {
@@ -57,10 +60,10 @@ public class Sintatico {
         // rotina();
         // {44}
 
-        if (token.getClasse() == Classe.palavraReservada && token.getValor().getValorTexto().equals("begin")) {
+        if (ehDeterminadaPalavraReservada("begin")) {
             token = lexico.nextToken();
-            //sentencas();
-            if(token.getClasse() == Classe.palavraReservada && token.getValor().getValorTexto().equals("end")) {
+            sentencas();
+            if(ehDeterminadaPalavraReservada("end")) {
                 token = lexico.nextToken();
             } else {
                 System.err.println(token.getLinha() + ", " + token.getColuna() + "Palavra reservada 'end' esperada no final.");
@@ -70,7 +73,88 @@ public class Sintatico {
         }
     }
 
+    // <declara> ::= var <dvar> <mais_dc> | ε
     private void declara() {
-
+        if (ehDeterminadaPalavraReservada("var")) {
+            token = lexico.nextToken();
+            dvar();
+            mais_dc();
+        }   
     }
+
+    // <dvar> ::= <variaveis> : <tipo_var> {A02}
+    private void dvar() {
+        variaveis();
+        if(token.getClasse() == Classe.doisPontos) {
+            token = lexico.nextToken();
+            tipo_var();
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Ponto e vírgula esperado.");
+        }
+    }
+
+    // <variaveis> ::= <id> {A03} <mais_var>
+    private void variaveis() {
+        if(token.getClasse() == Classe.identificador) {
+            token = lexico.nextToken(); 
+            mais_var();
+        }
+    }
+
+    // <mais_var> ::=  ,  <variaveis> | ε
+    private void mais_var() {
+        if(token.getClasse() == Classe.virgula) {
+            token = lexico.nextToken(); 
+            variaveis();
+        }
+    }
+
+    // <tipo_var> ::= integer
+    private void tipo_var() {
+        if(ehDeterminadaPalavraReservada("integer")) {
+            token = lexico.nextToken(); 
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Tipo integer esperado.");
+        }
+    }
+
+    //<mais_dc> ::=  ; <cont_dc>
+    private void mais_dc() {
+        if(token.getClasse() == Classe.pontoEVirgula) {
+            token = lexico.nextToken(); 
+            cont_dc();
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Ponto e vírgula esperado.");
+        }
+    }
+
+    // <cont_dc> ::= <dvar> <mais_dc> | ε
+    private void cont_dc() {
+        if(token.getClasse() == Classe.identificador) {
+            dvar();
+            mais_dc();
+        }
+    }
+
+    // <sentencas> ::= <comando> <mais_sentencas> 
+    private void sentencas() {
+        //comando()
+        mais_sentencas();
+    }
+
+    // <mais_sentencas> ::= ; <cont_sentencas>
+    private void mais_sentencas() {
+        if(token.getClasse() == Classe.pontoEVirgula) {
+            token = lexico.nextToken(); 
+            cont_sentencas();
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Ponto e vírgula esperado.");
+        }
+    }
+
+    // <cont_sentencas> ::= <sentencas> | ε
+    private void cont_sentencas() {
+        sentencas();
+    }
+
 }
