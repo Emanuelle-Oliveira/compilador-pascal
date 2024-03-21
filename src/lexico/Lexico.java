@@ -25,7 +25,7 @@ public class Lexico {
     "record", "repeat", "set", "then", "to",
     "type", "until", "var", "while", "with",
     "integer", "real", "boolean", "char", "string",
-    "write", "writeln", "read"
+    "write", "writeln", "read", "true", "false"
   );
 
   private Boolean ehPalavraReservada(String lexema) {

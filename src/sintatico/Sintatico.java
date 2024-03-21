@@ -138,7 +138,7 @@ public class Sintatico {
 
     // <sentencas> ::= <comando> <mais_sentencas> 
     private void sentencas() {
-        //comando()
+        comando();
         mais_sentencas();
     }
 
@@ -154,7 +154,253 @@ public class Sintatico {
 
     // <cont_sentencas> ::= <sentencas> | ε
     private void cont_sentencas() {
-        sentencas();
+        if(ehDeterminadaPalavraReservada("read") || 
+           ehDeterminadaPalavraReservada("write") || 
+           ehDeterminadaPalavraReservada("writeln") ||
+           ehDeterminadaPalavraReservada("for") ||
+           ehDeterminadaPalavraReservada("repeat") ||
+           ehDeterminadaPalavraReservada("while") ||
+           ehDeterminadaPalavraReservada("if") ||
+           token.getClasse() == Classe.identificador) {
+            sentencas();
+        }
     }
 
+    private void comando() {
+        if(ehDeterminadaPalavraReservada("read")) {
+            token = lexico.nextToken();
+            if(token.getClasse() == Classe.parentesesEsquerdo) {
+                token = lexico.nextToken();
+                var_read();
+                if(token.getClasse() == Classe.parentesesDireito) {
+                    token = lexico.nextToken();
+                    
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado no comando read.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses esquerdo esperado no comando read.");
+            }
+        } else if(ehDeterminadaPalavraReservada("write")) {
+            token = lexico.nextToken();
+            if(token.getClasse() == Classe.parentesesEsquerdo) {
+                token = lexico.nextToken();
+                exp_write();
+                if(token.getClasse() == Classe.parentesesDireito) {
+                    token = lexico.nextToken();
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado no comando write.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses esquerdo esperado no comando write.");
+            }
+        } else if(ehDeterminadaPalavraReservada("writeln")) {
+            token = lexico.nextToken();
+            if(token.getClasse() == Classe.parentesesEsquerdo) {
+                token = lexico.nextToken();
+                exp_write();
+                if(token.getClasse() == Classe.parentesesDireito) {
+                    token = lexico.nextToken();
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado no comando writeln.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses esquerdo esperado no comando writeln.");
+            }
+        } else if(ehDeterminadaPalavraReservada("for")) {
+            token = lexico.nextToken();
+
+            if(token.getClasse() == Classe.identificador) {
+                token = lexico.nextToken();
+
+                if(token.getClasse() == Classe.atribuicao) {
+                    token = lexico.nextToken();
+
+                    //expressao();
+
+                    if(ehDeterminadaPalavraReservada("to")) {
+                        token = lexico.nextToken();
+
+                        //expressao();
+                        if(ehDeterminadaPalavraReservada("do")) {
+                            token = lexico.nextToken();
+
+                            if(ehDeterminadaPalavraReservada("begin")) {
+                                token = lexico.nextToken();
+                                sentencas();
+
+                                if(ehDeterminadaPalavraReservada("end")) {
+                                    token = lexico.nextToken();
+                                } else {
+                                    System.err.println(token.getLinha() + ", " + token.getColuna() + "(end) esperado no comando for.");
+                                }
+                            } else {
+                                System.err.println(token.getLinha() + ", " + token.getColuna() + "(begin) esperado no comando for.");
+                            }
+                        } else {
+                            System.err.println(token.getLinha() + ", " + token.getColuna() + "(do) esperado no comando for.");
+                        }
+                    } else {
+                        System.err.println(token.getLinha() + ", " + token.getColuna() + "(to) esperado no comando for.");
+                    }
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Atribuição esperado no comando for.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Identificador esperado no comando for.");
+            }
+        } else if (ehDeterminadaPalavraReservada("repeat")) {
+            token = lexico.nextToken();
+            sentencas();
+
+            if(ehDeterminadaPalavraReservada("until")) {
+                token = lexico.nextToken();
+                if(token.getClasse() == Classe.parentesesEsquerdo) {
+                    token = lexico.nextToken();
+                    //expressao_logica();
+                    if(token.getClasse() == Classe.parentesesDireito) {
+                        token = lexico.nextToken();
+                    } else {
+                        System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado no comando until.");
+                    }
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses esquerdo esperado no comando until.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "(until) esperado no comando for.");
+            }
+        } else if (ehDeterminadaPalavraReservada("while")) {
+            token = lexico.nextToken();
+            if(token.getClasse() == Classe.parentesesEsquerdo) {
+                token = lexico.nextToken();
+                //expressao_logica();
+                if(token.getClasse() == Classe.parentesesDireito) {
+                    token = lexico.nextToken();
+                    
+                    if(ehDeterminadaPalavraReservada("do")) {
+                        token = lexico.nextToken();
+
+                        if(ehDeterminadaPalavraReservada("begin")) {
+                            token = lexico.nextToken();
+                            sentencas();
+
+                            if(ehDeterminadaPalavraReservada("end")) {
+                                token = lexico.nextToken();
+                            } else {
+                                System.err.println(token.getLinha() + ", " + token.getColuna() + "(end) esperado no comando while.");
+                            }
+                        } else {
+                            System.err.println(token.getLinha() + ", " + token.getColuna() + "(begin) esperado no comando while.");
+                        }
+                    } else {
+                        System.err.println(token.getLinha() + ", " + token.getColuna() + "(do) esperado no comando while.");
+                    }
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado no comando while.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses esquerdo esperado no comando while.");
+            }
+        } else if (ehDeterminadaPalavraReservada("if")) {
+            token = lexico.nextToken();
+            if(token.getClasse() == Classe.parentesesEsquerdo) {
+                token = lexico.nextToken();
+                //expressao_logica();
+                if(token.getClasse() == Classe.parentesesDireito) {
+                    token = lexico.nextToken();
+                    if(ehDeterminadaPalavraReservada("then")) {
+                        token = lexico.nextToken();
+
+                        if(ehDeterminadaPalavraReservada("begin")) {
+                            token = lexico.nextToken();
+                            sentencas();
+
+                            if(ehDeterminadaPalavraReservada("end")) {
+                                token = lexico.nextToken();
+                                pfalsa();
+                            } else {
+                                System.err.println(token.getLinha() + ", " + token.getColuna() + "(end) esperado no comando if.");
+                            }
+                        } else {
+                            System.err.println(token.getLinha() + ", " + token.getColuna() + "(begin) esperado no comando if.");
+                        }
+                    } else {
+                        System.err.println(token.getLinha() + ", " + token.getColuna() + "(then) esperado no comando if.");
+                    }
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado no comando if.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses esquerdo esperado no comando if.");
+            }
+        } else if (token.getClasse() == Classe.identificador) {
+            token = lexico.nextToken();
+
+            if(token.getClasse() == Classe.atribuicao) {
+                token = lexico.nextToken();
+                //expressao();
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Atribuição esperado após o identificador.");
+            }
+        }
+    }
+
+    // <var_read> ::= <id> {A08} <mais_var_read>
+    private void var_read() {
+        if (token.getClasse() == Classe.identificador) {
+            token = lexico.nextToken();
+            mais_var_read();
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Identificador esperado na regra var read.");
+        }  
+    }
+
+    // <mais_var_read> ::= , <var_read> | ε
+    private void mais_var_read() {
+        if (token.getClasse() == Classe.virgula) {
+            token = lexico.nextToken();
+            var_read();
+        }
+    }
+
+    // <exp_write> ::= <id> {A09} <mais_exp_write> |
+    // <string> {A59} <mais_exp_write> |
+    // <intnum> {A43} <mais_exp_write>
+    private void exp_write() {
+        if (token.getClasse() == Classe.identificador) {
+            token = lexico.nextToken();
+            mais_exp_write();
+        } else if (token.getClasse() == Classe.string) {
+            token = lexico.nextToken();
+            mais_exp_write();
+        } else if (token.getClasse() == Classe.numeroInteiro) {
+            token = lexico.nextToken();
+            mais_exp_write();
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Valor esperado no write.");
+        }
+    }
+
+    // <mais_exp_write> ::=  ,  <exp_write> | ε
+    private void mais_exp_write() {
+        if (token.getClasse() == Classe.virgula) {
+            token = lexico.nextToken();
+            exp_write();
+        }
+    }
+
+    // <pfalsa> ::= else {A25} begin <sentencas> end | ε
+    private void pfalsa() {
+        if (ehDeterminadaPalavraReservada("else")) {
+            token = lexico.nextToken();
+            if(ehDeterminadaPalavraReservada("begin")) {
+                token = lexico.nextToken();
+                sentencas();
+
+                if(ehDeterminadaPalavraReservada("end")) {
+                    token = lexico.nextToken();
+                }
+            } 
+        }
+    }
 }
