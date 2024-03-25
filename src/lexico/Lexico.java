@@ -246,17 +246,19 @@ public class Lexico {
         coluna++;
 
         while (caractere != '\'') {
-          lexema.append(caractere);
-
           if (caractere == '\n' || caractere == 65535) {
             System.err.println("Erro na linha " + linha + " e coluna " + coluna + ": String não foi fechada!");
             System.exit(-1);
           } else {
+            lexema.append(caractere);
             caractere = proximoChar();
             coluna++;
           }
         }
 
+        caractere = proximoChar();
+        coluna++;
+        
         token.setClasse(Classe.string);
         token.setValor(new Valor(lexema.toString()));
         return token;

@@ -216,12 +216,12 @@ public class Sintatico {
                 if(token.getClasse() == Classe.atribuicao) {
                     token = lexico.nextToken();
 
-                    //expressao();
+                    expressao();
 
                     if(ehDeterminadaPalavraReservada("to")) {
                         token = lexico.nextToken();
 
-                        //expressao();
+                        expressao();
                         if(ehDeterminadaPalavraReservada("do")) {
                             token = lexico.nextToken();
 
@@ -257,7 +257,7 @@ public class Sintatico {
                 token = lexico.nextToken();
                 if(token.getClasse() == Classe.parentesesEsquerdo) {
                     token = lexico.nextToken();
-                    //expressao_logica();
+                    expressao_logica();
                     if(token.getClasse() == Classe.parentesesDireito) {
                         token = lexico.nextToken();
                     } else {
@@ -273,7 +273,7 @@ public class Sintatico {
             token = lexico.nextToken();
             if(token.getClasse() == Classe.parentesesEsquerdo) {
                 token = lexico.nextToken();
-                //expressao_logica();
+                expressao_logica();
                 if(token.getClasse() == Classe.parentesesDireito) {
                     token = lexico.nextToken();
                     
@@ -305,7 +305,7 @@ public class Sintatico {
             token = lexico.nextToken();
             if(token.getClasse() == Classe.parentesesEsquerdo) {
                 token = lexico.nextToken();
-                //expressao_logica();
+                expressao_logica();
                 if(token.getClasse() == Classe.parentesesDireito) {
                     token = lexico.nextToken();
                     if(ehDeterminadaPalavraReservada("then")) {
@@ -338,7 +338,7 @@ public class Sintatico {
 
             if(token.getClasse() == Classe.atribuicao) {
                 token = lexico.nextToken();
-                //expressao();
+                expressao();
             } else {
                 System.err.println(token.getLinha() + ", " + token.getColuna() + "Atribuição esperado após o identificador.");
             }
@@ -401,6 +401,140 @@ public class Sintatico {
                     token = lexico.nextToken();
                 }
             } 
+        }
+    }
+
+    // <expressao_logica> ::= <termo_logico> <mais_expr_logica>
+    private void expressao_logica() {
+        termo_logico();
+        mais_expr_logica();
+    }
+
+    // <mais_expr_logica> ::= or <termo_logico> <mais_expr_logica> {A26} | ε
+    private void mais_expr_logica() {
+        if(ehDeterminadaPalavraReservada("or")) {
+            token = lexico.nextToken();
+            termo_logico();
+            mais_expr_logica();
+        }
+    }
+
+    // <termo_logico> ::= <fator_logico> <mais_termo_logico>
+    private void termo_logico() {
+        fator_logico();
+        mais_termo_logico();
+    }
+
+    // <mais_termo_logico> ::= and <fator_logico> <mais_termo_logico> {A27} | ε
+    private void mais_termo_logico() {
+        if(ehDeterminadaPalavraReservada("and")) {
+            token = lexico.nextToken();
+            fator_logico();
+            mais_termo_logico();
+        }
+    }
+
+    private void fator_logico() {
+        if (token.getClasse() == Classe.parentesesEsquerdo) { // xxxxxxxxxxx
+            token = lexico.nextToken();
+            expressao_logica();
+            if (token.getClasse() == Classe.parentesesDireito) {
+                token = lexico.nextToken();
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado na função fator logico.");
+            }
+        } else if (ehDeterminadaPalavraReservada("not")) {
+            token = lexico.nextToken();
+            fator_logico();
+        } else if (ehDeterminadaPalavraReservada("true")) {
+            token = lexico.nextToken();
+        } else if (ehDeterminadaPalavraReservada("false")) {
+            token = lexico.nextToken();
+        } else {
+            token = lexico.nextToken();
+            relacional();     
+        }
+    }
+
+    private void relacional() {
+        if (token.getClasse() == Classe.identificador 
+            || token.getClasse() == Classe.numeroInteiro 
+            || token.getClasse() == Classe.parentesesEsquerdo) {
+            
+            token = lexico.nextToken();
+            expressao();
+                
+            if (token.getClasse() == Classe.operadorIgual
+                || token.getClasse() == Classe.operadorMaior
+                || token.getClasse() == Classe.operadorMaiorIgual
+                || token.getClasse() == Classe.operadorMenor
+                || token.getClasse() == Classe.operadorMenorIgual
+                || token.getClasse() == Classe.operadorDiferente) {
+              
+                token = lexico.nextToken();
+                if (token.getClasse() == Classe.identificador 
+                || token.getClasse() == Classe.numeroInteiro 
+                || token.getClasse() == Classe.parentesesEsquerdo) {
+                    expressao();
+                } else {
+                    System.err.println(token.getLinha() + ", " + token.getColuna() + "Expressão inválida no relacional.");
+                }
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Operador inválido no relacional.");
+            }
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Expressão inválida no relacional.");
+        }
+    }
+
+    // <expressao> ::= <termo> <mais_expressao>
+    private void expressao() {
+        termo();
+        mais_expressao();
+    }
+
+    // <termo> ::= <fator> <mais_termo>
+    private void termo() {
+        fator();
+        mais_termo();
+    }
+
+    // <mais_expressao> ::= + <termo> <mais_expressao> {A37} |
+    //                      - <termo> <mais_expressao> {A38} | ε
+    private void mais_expressao() {
+        if (token.getClasse() == Classe.operadorSoma || token.getClasse() == Classe.operadorSubtracao) {
+            token = lexico.nextToken();
+            termo();
+            mais_expressao();
+        }
+    }
+
+    // <mais_termo> ::= * <fator> <mais_termo> {A39} |
+    //                  / <fator> <mais_termo> {A40} | ε
+    private void mais_termo() {
+        if (token.getClasse() == Classe.operadorMultiplicacao || token.getClasse() == Classe.operadorDivisao) {
+            token = lexico.nextToken();
+            fator();
+            mais_termo();
+        }
+    }
+
+    // <fator> ::= <id> {A55} | <intnum> {A41} | ( <expressao> ) | <id> {A60} <argumentos> {A42}
+    private void fator() {
+        if (token.getClasse() == Classe.identificador) {
+            token = lexico.nextToken();
+        } else if (token.getClasse() == Classe.numeroInteiro) {
+            token = lexico.nextToken();
+        } else if (token.getClasse() == Classe.parentesesEsquerdo) {
+            token = lexico.nextToken();
+            expressao();
+            if (token.getClasse() == Classe.parentesesDireito) {
+                token = lexico.nextToken();
+            } else {
+                System.err.println(token.getLinha() + ", " + token.getColuna() + "Parênteses direito esperado na função fator logico.");
+            }
+        } else {
+            System.err.println(token.getLinha() + ", " + token.getColuna() + "Fator invalido.");
         }
     }
 }
