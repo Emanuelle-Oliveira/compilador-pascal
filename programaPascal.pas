@@ -1,3 +1,4 @@
+
 program completo;
 var
     x, y: integer;
@@ -67,6 +68,7 @@ begin
 
     x := 10;
 end.
+
 
 { teste comentario  
 program condicional;

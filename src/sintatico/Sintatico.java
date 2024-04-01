@@ -451,7 +451,6 @@ public class Sintatico {
         } else if (ehDeterminadaPalavraReservada("false")) {
             token = lexico.nextToken();
         } else {
-            token = lexico.nextToken();
             relacional();     
         }
     }
@@ -461,7 +460,6 @@ public class Sintatico {
             || token.getClasse() == Classe.numeroInteiro 
             || token.getClasse() == Classe.parentesesEsquerdo) {
             
-            token = lexico.nextToken();
             expressao();
                 
             if (token.getClasse() == Classe.operadorIgual
