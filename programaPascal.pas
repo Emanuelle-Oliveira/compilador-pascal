@@ -4,11 +4,11 @@ var
     x, y: integer;
 begin
     read(x);
-    read(y);
-    read(x, y);
+    {read(y);
+    read(x, y);}
 
     write(x);
-    write('texto');
+    {write('texto');
     write(10);
 
     writeln(x);
@@ -66,7 +66,7 @@ begin
         write(y);
     end;
 
-    x := 10;
+    x := 10;}
 end.
 
 

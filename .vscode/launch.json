@@ -6,11 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Compilador",
+            "request": "launch",
+            "mainClass": "Compilador",
+            "projectName": "compilador-pascal_89f91ba1"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "args": 
-            [
+            "args": [
                 "programaPascal.pas"
             ]
         },
@@ -20,8 +26,7 @@
             "request": "launch",
             "mainClass": "Compilador",
             "projectName": "Trab01_Compilador_216eb5f7",
-            "args": 
-            [
+            "args": [
                 "programaPascal.pas"
             ]
         }
