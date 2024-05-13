@@ -101,7 +101,7 @@ public class Lexico {
           coluna++;
         }
 
-        token.setClasse(Classe.identificador);
+        token.setClasse(Classe.numeroInteiro);
         token.setValor(new Valor(Integer.parseInt(lexema.toString())));
         return token;
 

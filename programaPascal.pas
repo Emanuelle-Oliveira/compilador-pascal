@@ -8,7 +8,7 @@ begin
     read(x, y);}
 
     write(x);
-    {write('texto');
+    write('texto');
     write(10);
 
     writeln(x);
@@ -16,11 +16,10 @@ begin
     writeln(10);
 
     for x := 1 to 10 do begin
-        write(x);
-        write(y);
+       write(x);
     end;
 
-    x := 1;
+    {x := 1;
     repeat
         write(x);
         x := x + 1;
@@ -68,7 +67,6 @@ begin
 
     x := 10;}
 end.
-
 
 { teste comentario  
 program condicional;
