@@ -1,11 +1,12 @@
 program completo;
 var
     x, y: integer;
+    termo1, termo2, quantos, aux, cont: integer;
 begin
 
     writeln('----------READ------------');
 
-    read(x);
+    read(x); 
   {  read(y);
     read(x, y); }
 
@@ -26,7 +27,6 @@ begin
 
     for x := 1 to 10 do begin
        writeln(x);
-      { write(y); } 
     end;
 
     writeln('----------REPEAT------------');
@@ -150,4 +150,37 @@ begin
 
     writeln('----------ATRIBUICAO------------');
     x := 5;
+    writeln(x);
+    x:= 5 + 5;
+    writeln(x);
+    x:= x + 5;
+    writeln(x);
+    x:= 5 + x;
+    writeln(x); 
+    y := 10;
+    x := 5;
+    x:= y + x;
+    writeln(x);
+    y := 0;
+    y := x + x;
+    writeln(y); 
+
+    writeln('----------FIBONACCI------------');
+    termo1 := 1;
+    termo2 := 1;
+    quantos := 0;
+    aux := 0;
+    write('Informe a quantidade de numeros que deseja ver da sequencia fibonacci: ');
+    read(quantos);
+    writeln(termo1);
+    writeln(termo2);
+    cont := 2;
+    while (cont <= quantos) do
+    begin
+        aux := termo1 + termo2;
+        writeln(aux);    
+        termo1 := termo2;
+        termo2 := aux;
+        cont := cont + 1; 
+    end; 
 end.

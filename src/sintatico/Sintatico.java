@@ -553,6 +553,7 @@ public class Sintatico {
                 expressao();
 
                 // {A22}
+                registro = tabela.get(variavel);
                 escreverCodigo("\tpop eax");
                 escreverCodigo("\tmov dword[ebp - " + registro.getOffset() + "], eax");
                 // {A22}
@@ -1066,21 +1067,23 @@ public class Sintatico {
         if (token.getClasse() == Classe.operadorSoma) {
             token = lexico.nextToken();
             termo();
-            mais_expressao();
 
             // {A37}
             escreverCodigo("\tpop eax");
             escreverCodigo("\tadd dword[ESP], eax");
             // {A37}
+
+            mais_expressao();
         } else if (token.getClasse() == Classe.operadorSubtracao) {
             token = lexico.nextToken();
             termo();
-            mais_expressao();
 
             // {A38}
             escreverCodigo("\tpop eax");
             escreverCodigo("\tsub dword[ESP], eax");
             // {A38}
+
+            mais_expressao();
         }
     }
 
@@ -1090,7 +1093,6 @@ public class Sintatico {
         if (token.getClasse() == Classe.operadorMultiplicacao) {
             token = lexico.nextToken();
             fator();
-            mais_termo();
 
             // {A39}
             escreverCodigo("\tpop eax");
@@ -1098,10 +1100,10 @@ public class Sintatico {
             escreverCodigo("\tmov dword [ESP], eax");
             // {A39}
 
+            mais_termo();
         } else if (token.getClasse() == Classe.operadorDivisao) {
             token = lexico.nextToken();
             fator();
-            mais_termo();
 
             // {A40}
             escreverCodigo("\tpop ecx");
@@ -1109,6 +1111,8 @@ public class Sintatico {
             escreverCodigo("\tidiv ecx");
             escreverCodigo("\tpush eax");
             // {A40}
+
+            mais_termo();
         }
     }
 
